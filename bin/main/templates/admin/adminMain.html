@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/layout}">
+<head>
+    <title>관리자 페이지</title>
+    <style>
+        /* 임시로 간단한 스타일 */
+        h2 {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        nav a {
+            margin-right: 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #007bff;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            text-align: center;
+        }
+        
+        /* 아래는 채팅 화면용 임시 스타일 */
+        #chat-section {
+            margin-top: 20px;
+        }
+        #chat-content {
+            width: 400px; 
+            height: 300px; 
+            border: 1px solid #ccc; 
+            overflow-y: auto; 
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+
+    </style>
+    
+        <!-- SockJS, StompJS (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="container">
+        <h2>관리자 페이지</h2>
+        <nav class="d-flex justify-content-center gap-5">
+            <a th:href="@{/admin/orders}">주문 관리</a>
+            <a th:href="@{/admin/members}">회원 관리</a>
+            <a th:href="@{/admin/categories}">카테고리 관리</a>
+            <a th:href="@{/admin/products}">상품 관리</a>
+            <a th:href="@{/admin/point}">포인트 관리</a>
+        </nav>
+        
+        
+        <!-- 상담 채팅 화면 -->
+        <hr>
+        <h2>상담 채팅 관리</h2>
+        
+        <!-- 현재 대기/진행중인 방 목록 -->
+        <div>
+            <h3>대기/진행중 방 목록</h3>
+            <div th:each="room : ${rooms}">
+                <!-- 예: 방 정보 표시 -->
+                <p th:text="'userID: ' + ${room.userId} + ', Status: ' + ${room.status}"></p>
+                <button th:attr="onclick=|joinRoom('${room.roomId}')|">연결</button>
+            </div>
+        </div>
+
+		<!-- 실시간 채팅 UI -->
+		<div id="chat-section" style="display:none;">
+		    <h2><span id="room-id-span"></span></h2>
+		    <div id="chatbot-content" style="border:1px solid #ccc; width:400px; height:200px; overflow-y:auto;"></div>
+		    <input type="text" id="adminMsg" placeholder="메시지...">
+		    <button onclick="sendAdminMsg()">전송</button>
+		</div>
+    </div>
+    <script src="/admin/js/adminChat.js"></script>
+</main>
+</body>
+</html>
